@@ -5,6 +5,7 @@ import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { SignIn } from '@screens/sign-in';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'react-native';
+import { SignUp } from '@screens/sign-up';
 
 export function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
@@ -17,7 +18,7 @@ export function App() {
           translucent
         />
 
-        {fontsLoaded ? <SignIn /> : <Loading /> }
+        {fontsLoaded ? <SignUp /> : <Loading /> }
     </GluestackUIProvider>
   );
 }
