@@ -1,28 +1,48 @@
-import { Group } from "@components/group";
-import { HomeHeader } from "@components/home-header";
-import { HStack, VStack } from "@gluestack-ui/themed";
-import { useState } from "react";
+import { Group } from "@components/group"
+import { HomeHeader } from "@components/home-header"
+import { FlatList, Heading, HStack, Text, VStack } from "@gluestack-ui/themed"
+import { useState } from "react"
 
 export function Home() {
-  const [groupSelected, setGroupSelected] = useState('dorsal')
+  const [groups, setGroups] = useState([
+    "Dorsal",
+    "Biceps",
+    "Triceps",
+    "Ombro",
+  ])
+  const [groupSelected, setGroupSelected] = useState("Dorsal")
 
   return (
     <VStack flex={1}>
       <HomeHeader />
 
-      <HStack>
-        <Group
-          name="Dorsal" 
-          isActive={groupSelected === 'dorsal'} 
-          onPress={() => setGroupSelected('dorsal')} 
-        />
+      <FlatList
+        data={groups}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => (
+          <Group
+            name={item}
+            isActive={groupSelected === item}
+            onPress={() => setGroupSelected(item)}
+          />
+        )}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 32 }}
+        style={{ marginVertical: 40, maxHeight: 44, minHeight: 44 }}
+      />
 
-        <Group
-          name="Ombro" 
-          isActive={groupSelected === 'ombro'} 
-          onPress={() => setGroupSelected('ombro')} 
-        />
-      </HStack>
+      <VStack px="$8">
+        <HStack justifyContent="space-between" mb="$5" alignItems="center">
+          <Heading color="$gray200" fontSize="$md" fontFamily="$heading">
+            Exercícios
+          </Heading>
+
+          <Text color="$gray200" fontSize="$sm" fontFamily="$body">
+            4
+          </Text>
+        </HStack>
+      </VStack>
     </VStack>
   )
 }
