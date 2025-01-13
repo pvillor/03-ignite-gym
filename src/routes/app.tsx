@@ -9,6 +9,7 @@ import { Home } from "@screens/home"
 import { Profile } from "@screens/profile"
 import { gluestackUIConfig } from "../../config/gluestack-ui.config"
 import { Platform } from "react-native"
+import { Exercise } from "@screens/exercise"
 
 type AppRoutesParams = {
   home: undefined
@@ -68,11 +69,11 @@ export function AppRoutes() {
           ),
         }}
       />
-      {/* <Screen
+      <Screen
         name="exercise"
         component={Exercise}
         options={{ tabBarButton: () => null }}
-      /> */}
+      />
     </Navigator>
   )
 }
