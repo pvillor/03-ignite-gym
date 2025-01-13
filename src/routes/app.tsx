@@ -4,7 +4,6 @@ import HomeSvg from "@assets/home.svg"
 import HistorySvg from "@assets/history.svg"
 import ProfileSvg from "@assets/profile.svg"
 
-import { Exercise } from "@screens/exercise"
 import { History } from "@screens/history"
 import { Home } from "@screens/home"
 import { Profile } from "@screens/profile"
@@ -69,11 +68,11 @@ export function AppRoutes() {
           ),
         }}
       />
-      <Screen
+      {/* <Screen
         name="exercise"
         component={Exercise}
         options={{ tabBarButton: () => null }}
-      />
+      /> */}
     </Navigator>
   )
 }
