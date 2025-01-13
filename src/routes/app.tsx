@@ -51,6 +51,7 @@ export function AppRoutes() {
           ),
         }}
       />
+      
       <Screen
         name="history"
         component={History}
@@ -60,6 +61,7 @@ export function AppRoutes() {
           ),
         }}
       />
+
       <Screen
         name="profile"
         component={Profile}
@@ -69,6 +71,7 @@ export function AppRoutes() {
           ),
         }}
       />
+
       <Screen
         name="exercise"
         component={Exercise}
