@@ -122,6 +122,7 @@ export function SignUp() {
               name="password"
               render={({ field: { onChange, value } }) => (
                 <Input
+                  secureTextEntry
                   placeholder="Senha" 
                   value={value}
                   onChangeText={onChange}
@@ -135,6 +136,7 @@ export function SignUp() {
               name="passwordConfirm"
               render={({ field: { onChange, value } }) => (
                 <Input
+                  secureTextEntry
                   placeholder="Confirme sua senha" 
                   value={value}
                   onChangeText={onChange}
