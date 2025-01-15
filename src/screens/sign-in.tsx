@@ -13,6 +13,7 @@ import { api } from "@services/api";
 import { AppError } from "@utils/app-error";
 import { useAuth } from "@hooks/use-auth";
 import { UserDTO } from "@dtos/user-dto";
+import { useState } from "react";
 
 interface SignInSchema {
   email: string
@@ -27,6 +28,8 @@ const signInSchema = yup.object({
 })
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false)
+
   const { signIn } = useAuth()
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
@@ -39,10 +42,13 @@ export function SignIn() {
 
   async function handleSignIn({ email, password }: SignInSchema) {
     try {
-      signIn(email, password)
+      setIsLoading(true)
+      await signIn(email, password)
      } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Não foi possível entrar. Tente novamente mais tarde.'
+
+      setIsLoading(false)
 
       toast.show({
         render: () => title,
@@ -109,7 +115,7 @@ export function SignIn() {
               )}
             />
 
-            <Button title="Acessar" onPress={handleSubmit(handleSignIn)} />
+            <Button title="Acessar" onPress={handleSubmit(handleSignIn)} isLoading={isLoading} />
           </Center>
 
           <Center flex={1} justifyContent="flex-end" mt="$4">
