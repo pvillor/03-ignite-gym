@@ -1,4 +1,4 @@
-import { Center, Heading, Image, ScrollView, Text, VStack } from "@gluestack-ui/themed"
+import { Center, Heading, Image, ScrollView, Text, useToast, VStack } from "@gluestack-ui/themed"
 
 import backgroundImage from "@assets/background.png"
 import Logo from "@assets/logo.svg"
@@ -10,6 +10,8 @@ import { Controller, useForm } from "react-hook-form"
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import * as yup from 'yup'
+import { api } from "@services/api"
+import { AppError } from "@utils/app-error"
 
 interface CreateAccountSchema {
   name: string
@@ -32,6 +34,8 @@ const signUpSchema = yup.object({
 })
 
 export function SignUp() {
+  const toast = useToast()
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
   const { control, handleSubmit, formState: { errors } } = useForm<CreateAccountSchema>({
@@ -42,10 +46,29 @@ export function SignUp() {
     navigation.navigate('sign-in')
   }
 
-  function handleSignUp({ name, email, password, passwordConfirm }: CreateAccountSchema) {
-     
-  }
+  async function handleSignUp({ name, email, password }: CreateAccountSchema) {
+     try {
+      const { data } = await api.post('users', {
+        name,
+        email,
+        password
+     })
 
+     console.log(data)
+     } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde.'
+
+      toast.show({
+        render: () => title,
+        placement: 'top',
+        containerStyle: {
+          bgColor: 'red.500'
+        }
+      })
+     }
+  }
+  
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
       <VStack flex={1}>
