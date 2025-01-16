@@ -19,6 +19,7 @@ interface ExerciseParams {
 }
 
 export function Exercise() {
+  const [sendingRegister, setSendingRegister] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
@@ -42,6 +43,31 @@ export function Exercise() {
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Não foi possível carregar os grupos.'
+
+      toast.show({
+        render: () => <Text>{title}</Text>,
+        placement: 'top'
+      })
+    } finally {
+      setIsLoading(true)
+    }
+  }
+
+  async function handleExerciseHistoryRegister() {
+    try {
+      setSendingRegister(true)
+
+      await api.post('/history', { exercise_id: exerciseId })
+
+      toast.show({
+        render: () => <Text>Parabéns! Exercício registrado no seu histórico.</Text>,
+        placement: 'top'
+      })
+
+      navigation.navigate('history')
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível registrar o exercício.'
 
       toast.show({
         render: () => <Text>{title}</Text>,
@@ -118,7 +144,11 @@ export function Exercise() {
                 </HStack>
               </HStack>
 
-              <Button title="Marcar como realizado" />
+              <Button
+                title="Marcar como realizado" 
+                isLoading={sendingRegister}
+                onPress={handleExerciseHistoryRegister}
+              />
             </Box>
           </VStack>
         </ScrollView>
