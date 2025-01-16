@@ -1,31 +1,63 @@
 import { ExerciseCard } from "@components/exercise-card"
 import { Group } from "@components/group"
 import { HomeHeader } from "@components/home-header"
-import { FlatList, Heading, HStack, Text, VStack } from "@gluestack-ui/themed"
-import { useNavigation } from "@react-navigation/native"
+import { FlatList, Heading, HStack, Text, useToast, VStack } from "@gluestack-ui/themed"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { AppNavigatorRoutesProps } from "@routes/app"
-import { useState } from "react"
+import { api } from "@services/api"
+import { AppError } from "@utils/app-error"
+import { useCallback, useEffect, useState } from "react"
 
 export function Home() {
-  const [exercises, setExercises] = useState([
-    "Puxada frontal",
-    "Remada curvada",
-    "Remada unilateral",
-    "Levantamento terra",
-  ])
-  const [groups, setGroups] = useState([
-    "Dorsal",
-    "Biceps",
-    "Triceps",
-    "Ombro",
-  ])
+  const [exercises, setExercises] = useState<string[]>([])
+  const [groups, setGroups] = useState<string[]>([])
   const [groupSelected, setGroupSelected] = useState("Dorsal")
 
+  const toast = useToast()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   function handleOpenExerciseDetails() {
     navigation.navigate('exercise')
   }
+
+  async function fetchGroups() {
+    try {
+      const { data } = await api.get('groups')
+      setGroups(data)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível carregar os grupos.'
+
+      toast.show({
+        render: () => <Text>{title}</Text>,
+        placement: 'top'
+      })
+    }
+  }
+
+  async function fetchExercisesByGroup() {
+    try {
+      const { data } = await api.get(`exercises/bygroup/${groupSelected}`)
+      setExercises(data)
+      console.log(data)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível carregar os grupos.'
+
+      toast.show({
+        render: () => <Text>{title}</Text>,
+        placement: 'top'
+      })
+    }
+  }
+
+  useEffect(() => {
+    fetchGroups()
+  }, [])
+
+  useFocusEffect(useCallback(() => {
+    fetchExercisesByGroup()
+  }, [groupSelected]))
 
   return (
     <VStack flex={1}>

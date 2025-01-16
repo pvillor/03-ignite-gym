@@ -51,11 +51,11 @@ export function SignIn() {
       setIsLoading(false)
 
       toast.show({
-        render: () => title,
+        render: () => <Text>{title}</Text>,
         placement: 'top',
         containerStyle: {
-          bgColor: 'red.500'
-        }
+          bgColor: 'red'
+        },
       })
      }
   }

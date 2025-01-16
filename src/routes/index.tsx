@@ -5,13 +5,14 @@ import { Box, useTheme } from "@gluestack-ui/themed"
 import { AppRoutes } from "./app"
 import { useAuth } from "@hooks/use-auth"
 import { Loading } from "@components/loading"
+import { config } from "../../config/gluestack-ui.config"
 
 export function Routes() {
-  const { colors } = useTheme()
+  const { colors } = config.tokens
   const { user, isLoadingUserStorageData } = useAuth()
 
   const theme = DefaultTheme
-  theme.colors.background = colors.gray[700]
+  theme.colors.background = colors.gray700
 
   if (isLoadingUserStorageData) {
     return <Loading />

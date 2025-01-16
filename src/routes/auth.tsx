@@ -1,4 +1,3 @@
-import { ParamListBase } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { SignIn } from "@screens/sign-in"
 import { SignUp } from "@screens/sign-up"
