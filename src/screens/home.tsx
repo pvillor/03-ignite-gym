@@ -14,13 +14,13 @@ export function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [exercises, setExercises] = useState<ExerciseDTO[]>([])
   const [groups, setGroups] = useState<string[]>([])
-  const [groupSelected, setGroupSelected] = useState("Dorsal")
+  const [groupSelected, setGroupSelected] = useState("Antebraço")
 
   const toast = useToast()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
-  function handleOpenExerciseDetails() {
-    navigation.navigate('exercise')
+  function handleOpenExerciseDetails(exerciseId: string) {
+    navigation.navigate('exercise', { exerciseId })
   }
 
   async function fetchGroups() {
@@ -102,7 +102,12 @@ export function Home() {
             <FlatList
               data={exercises}
               keyExtractor={(item: ExerciseDTO) => item.id}
-              renderItem={({ item }) => <ExerciseCard data={item} onPress={handleOpenExerciseDetails} />}
+              renderItem={({ item }) => (
+                <ExerciseCard
+                  data={item} 
+                  onPress={() => handleOpenExerciseDetails(item.id)} 
+                />
+              )}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 20 }}
             />
