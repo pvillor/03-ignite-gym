@@ -1,8 +1,13 @@
 import { Heading, HStack, Icon, Text, VStack } from "@gluestack-ui/themed"
 import { UserPhoto } from "./user-photo"
 import { LogOut } from "lucide-react-native"
+import { useAuth } from "@hooks/use-auth"
+
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png'
 
 export function HomeHeader() {
+  const { user } = useAuth()
+
   return (
     <HStack
       bg="$gray600" 
@@ -13,7 +18,7 @@ export function HomeHeader() {
       gap="$4"
     >
       <UserPhoto
-        source={{ uri: "https://github.com/pvillor.png" }}
+        source={ user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
         w="$16"
         h="$16"
         alt="Imagem do usuário"
@@ -24,7 +29,7 @@ export function HomeHeader() {
           Olá,
         </Text>
         <Heading color="$gray100" fontSize="$md">
-          Paulo Victor
+          {user.name}
         </Heading>
       </VStack>
 
