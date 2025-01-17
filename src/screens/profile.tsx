@@ -9,13 +9,14 @@ import { ToastMessage } from "@components/toast-message"
 import { Controller, useForm } from "react-hook-form"
 import { useAuth } from "@hooks/use-auth"
 
-
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { api } from "@services/api"
 import { AppError } from "@utils/app-error"
+
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png'
 
 interface ProfileSchema {
   name: string
@@ -45,8 +46,6 @@ const profileSchema = yup.object({
 
 export function Profile() {
   const [isUpdating, setIsUpdating] = useState(false)
-  const [isPhotoLoading, setIsPhotoLoading] = useState(false)
-  const [userPhoto, setUserPhoto] = useState("https://github.com/pvillor.png")
 
   const toast = useToast()
   const { user, updateUserProfile } = useAuth()
@@ -59,8 +58,6 @@ export function Profile() {
   })
 
   async function handleUserPhotoSelect() {
-    setIsPhotoLoading(true)
-
     try {
       const photoSelected = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -93,13 +90,41 @@ export function Profile() {
             )
           })
         }
-
-        setUserPhoto(photoURI)
       }
+
+      const fileExtension = photoURI.split('.').pop()
+
+      const photoFile = {
+        name: `${user.name}.${fileExtension}`.toLowerCase(),
+        uri: photoURI,
+        type: `${photoSelected.assets[0].type}/${fileExtension}`
+      } as any
+
+      const userPhotoUploadForm = new FormData()
+      userPhotoUploadForm.append('avatar', photoFile)
+
+      const { data } = await api.patch('/users/avatar', userPhotoUploadForm, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      const userUpdated = user
+      userUpdated.avatar = data.avatar
+      updateUserProfile(userUpdated)
+
+      toast.show({
+        render: () => (
+          <ToastMessage
+            id="update-photo-success"
+            title="Foto atualizada!"
+            action="success"
+            onClose={() => {}}
+          />
+        )
+      })
     } catch (error) {
       console.log(error)
-    } finally {
-      setIsPhotoLoading(false)
     }
   }
 
@@ -153,7 +178,7 @@ export function Profile() {
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt="$6" px="$10">
           <UserPhoto
-            source={{ uri: userPhoto }}
+            source={ user.avatar ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` } : defaultUserPhotoImg}
             alt="Foto do usuário"
             size="xl"
           />

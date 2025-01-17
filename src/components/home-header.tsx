@@ -5,9 +5,12 @@ import { useAuth } from "@hooks/use-auth"
 
 import defaultUserPhotoImg from '@assets/userPhotoDefault.png'
 import { TouchableOpacity } from "react-native"
+import { api } from "@services/api"
 
 export function HomeHeader() {
   const { user, signOut } = useAuth()
+
+
 
   return (
     <HStack
@@ -19,7 +22,7 @@ export function HomeHeader() {
       gap="$4"
     >
       <UserPhoto
-        source={ user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
+        source={ user.avatar ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` } : defaultUserPhotoImg}
         w="$16"
         h="$16"
         alt="Imagem do usuário"
