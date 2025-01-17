@@ -115,7 +115,14 @@ export function Profile() {
       await updateUserProfile(userUpdated)
 
       toast.show({
-        render: () => <Text>Perfil atualizado com sucesso</Text>,
+        render: () => (
+          <ToastMessage
+            id="update-profile-success"
+            title="Perfil atualizado com sucesso" 
+            action="success" 
+            onClose={() => {}} 
+          />
+        ),
         placement: 'top'
       })
 
@@ -124,7 +131,14 @@ export function Profile() {
       const title = isAppError ? error.message : 'Não foi possível atualizar os dados.'
       
       toast.show({
-        render: () => <Text>{title}</Text>,
+        render: () => (
+          <ToastMessage
+            id="update-profile-error"
+            title={title} 
+            action="error" 
+            onClose={() => {}} 
+          />
+        ),
         placement: 'top'
       })
     } finally {
@@ -135,8 +149,6 @@ export function Profile() {
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
-
-      <ToastMessage id="1" title="teste" description="teste" action="success" onClose={() => {}} />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt="$6" px="$10">
@@ -190,7 +202,7 @@ export function Profile() {
           <Heading
             alignSelf="flex-start"
             fontFamily="$heading"
-            color="$gray700"
+            color="$gray200"
             fontSize="$md"
             mt="$12"
             mb="$2"

@@ -6,6 +6,7 @@ import { AppError } from "@utils/app-error"
 import { api } from "@services/api"
 import { useFocusEffect } from "@react-navigation/native"
 import { HistoryByDayDTO } from "@dtos/history-by-day-dto"
+import { ToastMessage } from "@components/toast-message"
 
 export function History() {
   const [isLoading, setIsLoading] = useState(false)
@@ -25,7 +26,14 @@ export function History() {
       const title = isAppError ? error.message : 'Não foi possível registrar o exercício.'
 
       toast.show({
-        render: () => <Text>{title}</Text>,
+        render: () => (
+          <ToastMessage
+            id="fetch-history-error"
+            title={title}
+            action="error"
+            onClose={() => {}}
+          />
+        ),
         placement: 'top'
       })
     } finally {

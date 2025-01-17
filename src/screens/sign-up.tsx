@@ -14,6 +14,7 @@ import { api } from "@services/api"
 import { AppError } from "@utils/app-error"
 import { useState } from "react"
 import { useAuth } from "@hooks/use-auth"
+import { ToastMessage } from "@components/toast-message"
 
 interface CreateAccountSchema {
   name: string
@@ -69,11 +70,15 @@ export function SignUp() {
       const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde.'
 
       toast.show({
-        render: () => <Text>{title}</Text>,
-        placement: 'top',
-        containerStyle: {
-          bgColor: 'red.500'
-        }
+        render: () => (
+          <ToastMessage
+            id="sign-up-error"
+            title={title}
+            action="error"
+            onClose={() => {}}
+          />
+        ),
+        placement: 'top'
       })
      }
   }

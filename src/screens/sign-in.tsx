@@ -14,6 +14,7 @@ import { AppError } from "@utils/app-error";
 import { useAuth } from "@hooks/use-auth";
 import { UserDTO } from "@dtos/user-dto";
 import { useState } from "react";
+import { ToastMessage } from "@components/toast-message";
 
 interface SignInSchema {
   email: string
@@ -51,11 +52,15 @@ export function SignIn() {
       setIsLoading(false)
 
       toast.show({
-        render: () => <Text>{title}</Text>,
+        render: () => (
+          <ToastMessage
+            id="sign-in-error"
+            title={title} 
+            action="error" 
+            onClose={() => {}} 
+          />
+        ),
         placement: 'top',
-        containerStyle: {
-          bgColor: 'red'
-        },
       })
      }
   }

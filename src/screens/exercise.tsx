@@ -13,6 +13,7 @@ import { api } from "@services/api"
 import { useEffect, useState } from "react"
 import { ExerciseDTO } from "@dtos/exercise-dto"
 import { Loading } from "@components/loading"
+import { ToastMessage } from "@components/toast-message"
 
 interface ExerciseParams {
   exerciseId: string
@@ -20,7 +21,7 @@ interface ExerciseParams {
 
 export function Exercise() {
   const [sendingRegister, setSendingRegister] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
@@ -39,17 +40,23 @@ export function Exercise() {
 
       const { data } = await api.get(`exercises/${exerciseId}`)
       setExercise(data)
-
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Não foi possível carregar os grupos.'
 
       toast.show({
-        render: () => <Text>{title}</Text>,
+        render: () => (
+          <ToastMessage
+            id="get-exercise-error"
+            title={title}
+            action="success"
+            onClose={() => {}}
+          />
+        ),
         placement: 'top'
       })
     } finally {
-      setIsLoading(true)
+      setIsLoading(false)
     }
   }
 
@@ -60,7 +67,14 @@ export function Exercise() {
       await api.post('/history', { exercise_id: exerciseId })
 
       toast.show({
-        render: () => <Text>Parabéns! Exercício registrado no seu histórico.</Text>,
+        render: () => (
+          <ToastMessage
+            id="register-history-success"
+            title="Parabéns! Exercício registrado no seu histórico."
+            action="success"
+            onClose={() => {}}
+          />
+        ),
         placement: 'top'
       })
 
@@ -70,7 +84,14 @@ export function Exercise() {
       const title = isAppError ? error.message : 'Não foi possível registrar o exercício.'
 
       toast.show({
-        render: () => <Text>{title}</Text>,
+        render: () => (
+          <ToastMessage
+            id="register-history-error"
+            title={title}
+            action="error"
+            onClose={() => {}}
+          />
+        ),
         placement: 'top'
       })
     } finally {

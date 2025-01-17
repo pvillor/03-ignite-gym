@@ -2,6 +2,7 @@ import { ExerciseCard } from "@components/exercise-card"
 import { Group } from "@components/group"
 import { HomeHeader } from "@components/home-header"
 import { Loading } from "@components/loading"
+import { ToastMessage } from "@components/toast-message"
 import { ExerciseDTO } from "@dtos/exercise-dto"
 import { FlatList, Heading, HStack, Text, useToast, VStack } from "@gluestack-ui/themed"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
@@ -32,7 +33,14 @@ export function Home() {
       const title = isAppError ? error.message : 'Não foi possível carregar os grupos.'
 
       toast.show({
-        render: () => <Text>{title}</Text>,
+        render: () => (
+          <ToastMessage
+            id="fetch-groups-error"
+            title={title} 
+            action="error" 
+            onClose={() => {}} 
+          />
+        ),
         placement: 'top'
       })
     }
@@ -44,13 +52,19 @@ export function Home() {
 
       const { data } = await api.get(`exercises/bygroup/${groupSelected}`)
       setExercises(data)
-      console.log(data)
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Não foi possível carregar os grupos.'
 
       toast.show({
-        render: () => <Text>{title}</Text>,
+        render: () => (
+          <ToastMessage
+            id="fetch-exercises-error"
+            title={title} 
+            action="error" 
+            onClose={() => {}} 
+          />
+        ),
         placement: 'top'
       })
     } finally {
